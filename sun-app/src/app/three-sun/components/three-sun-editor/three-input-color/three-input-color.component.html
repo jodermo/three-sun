@@ -1,0 +1,6 @@
+<div class="three-input-color form-field">
+  <label class="form-field-label" *ngIf="label" [for]="id">{{ label }}</label>
+  <input class="form-field-input" [id]="id" [name]="id" type="color" [value]="getInputValue()"
+    (input)="triggerRealtimeChange($event)" (change)="triggerChange($event)" />
+  <span class="form-field-value" [ngStyle]="{color:getInputValue()}">{{getInputValue()}}</span>
+</div>

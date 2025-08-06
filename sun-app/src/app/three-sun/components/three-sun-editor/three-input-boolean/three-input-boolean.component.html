@@ -1,0 +1,6 @@
+<div class="three-input-boolean form-field">
+    <label class="form-field-label" *ngIf="label" [for]="id">{{ label }}</label>
+    <input class="form-field-input" [id]="id" type="checkbox" [value]="getInputValue()"
+        (input)="triggerRealtimeChange($event)" (change)="triggerChange($event)" />
+    <span class="form-field-value">{{getInputValue()}}</span>
+</div>

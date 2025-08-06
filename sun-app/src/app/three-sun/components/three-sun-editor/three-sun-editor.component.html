@@ -1,0 +1,105 @@
+<div class="three-sun-editor">
+
+    <div>
+        <h2>Sun Shader</h2>
+
+        <app-three-input-color id="baseColor" [value]="sun.options.shader.baseColor" label="base color"
+            (onChange)="sun.options.shader.baseColor.set($event)"></app-three-input-color>
+
+        <app-three-input-color id="hotColor" [value]="sun.options.shader.hotColor" label="hot color"
+            (onChange)="sun.options.shader.hotColor.set($event)"></app-three-input-color>
+
+        <app-three-input-color id="deepColor" [value]="sun.options.shader.deepColor" label="deep color"
+            (onChange)="sun.options.shader.deepColor.set($event)"></app-three-input-color>
+
+        <app-three-input-color id="emissiveColor" [value]="sun.options.shader.emissiveColor" label="emissive color"
+            (onChange)="sun.options.shader.emissiveColor.set($event)"></app-three-input-color>
+
+
+        <app-three-input-number id="distortionStrength" [value]="sun.options.shader.distortionStrength"
+            label="distortion strength" [min]="0" [max]="10" [step]=".01"
+            (onChange)="sun.options.shader.distortionStrength = $event"></app-three-input-number>
+
+        <app-three-input-number id="emissiveStrength" [value]="sun.options.shader.emissiveStrength"
+            label="emissive strength" [min]="-10" [max]="10" [step]=".01"
+            (onChange)="sun.options.shader.emissiveStrength = $event"></app-three-input-number>
+
+
+        <app-three-input-number id="fbmFrequency" [value]="sun.options.shader.fbmFrequency" label="fbm frequency"
+            [min]="0.01" [max]="100" [step]=".01"
+            (onChange)="sun.options.shader.fbmFrequency = $event"></app-three-input-number>
+
+        <app-three-input-number id="brightness" [value]="sun.options.shader.brightness" label="brightness" [min]="-10"
+            [max]="10" [step]=".01" (onChange)="sun.options.shader.brightness = $event"></app-three-input-number>
+
+
+        <app-three-input-number id="contrastPower" [value]="sun.options.shader.contrastPower" label="contrastPower"
+            [min]="-10" [max]="10" [step]=".01"
+            (onChange)="sun.options.shader.contrastPower = $event"></app-three-input-number>
+
+        <app-three-input-number id="fbmScale" [value]="sun.options.shader.fbmScale" label="fbmScale" [min]="-10"
+            [max]="10" [step]=".01" (onChange)="sun.options.shader.fbmScale = $event"></app-three-input-number>
+
+        <app-three-input-number id="fbmOffset" [value]="sun.options.shader.fbmOffset" label="fbmOffset" [min]="-10"
+            [max]="10" [step]=".01" (onChange)="sun.options.shader.fbmOffset = $event"></app-three-input-number>
+
+        <app-three-input-number id="emissiveThresholdMin" [value]="sun.options.shader.emissiveThresholdMin"
+            label="emissiveThresholdMin" [min]=".01" [max]="10" [step]=".01"
+            (onChange)="sun.options.shader.emissiveThresholdMin = $event"></app-three-input-number>
+
+        <app-three-input-number id="emissiveThresholdMax" [value]="sun.options.shader.emissiveThresholdMax"
+            label="emissiveThresholdMax" [min]=".01" [max]="10" [step]=".01"
+            (onChange)="sun.options.shader.emissiveThresholdMax = $event"></app-three-input-number>
+
+    </div>
+
+<!--
+    <div>
+        <h2>Lens Flares</h2>
+
+        <app-three-input-boolean id="emissiveColor" [value]="sun.options.lensFLares.active" label="emissive color"
+            (onChange)="sun.options.lensFLares.active = $event"></app-three-input-boolean>
+
+
+    </div>
+
+    -->
+    <div *ngFor="let corona of sun.options.coronas; let  i = index">
+        <h2>Corona {{(i + 1)}}</h2>
+
+
+        <app-three-input-number id="flareStrength_{{i}}" [value]="corona.flareStrength"
+            label="flare strength" [min]=".01" [max]="100" [step]=".01"
+            (onChange)="corona.flareStrength = $event"></app-three-input-number>
+
+        <app-three-input-number id="baseGlowStrength_{{i}}" [value]="corona.baseGlowStrength"
+            label="base glow strength" [min]=".01" [max]="100" [step]=".01"
+            (onChange)="corona.baseGlowStrength = $event"></app-three-input-number>
+
+        <app-three-input-number id="radialFalloff_{{i}}" [value]="corona.radialFalloff"
+            label="radial falloff" [min]=".01" [max]="100" [step]=".01"
+            (onChange)="corona.radialFalloff = $event"></app-three-input-number>
+
+        <app-three-input-number id="flareFalloff_{{i}}" [value]="corona.flareFalloff"
+            label="flare falloff" [min]=".01" [max]="100" [step]=".01"
+            (onChange)="corona.flareFalloff = $event"></app-three-input-number>
+
+
+        <app-three-input-number id="edgeFadeStart_{{i}}" [value]="corona.edgeFadeStart"
+            label="edge fade start" [min]=".01" [max]="100" [step]=".01"
+            (onChange)="corona.edgeFadeStart = $event"></app-three-input-number>
+
+        <app-three-input-number id="edgeFadeEnd_{{i}}" [value]="corona.edgeFadeEnd"
+            label="edge fade end" [min]=".01" [max]="100" [step]=".01"
+            (onChange)="corona.edgeFadeEnd = $event"></app-three-input-number>
+
+        <app-three-input-number id="baseGlowThreshold_{{i}}" [value]="corona.baseGlowThreshold"
+            label="base glow threshold" [min]=".01" [max]="1" [step]=".01"
+            (onChange)="corona.baseGlowThreshold = $event"></app-three-input-number>
+
+        <app-three-input-number id="animationSpeed_{{i}}" [value]="corona.animationSpeed"
+            label="animation speed" [min]=".01" [max]="100" [step]=".01"
+            (onChange)="corona.animationSpeed = $event"></app-three-input-number>
+
+    </div>
+</div>
