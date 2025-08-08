@@ -49,32 +49,32 @@
 
 
                 <app-three-input-number id="distortionStrength" [value]="sun.options.shader.distortionStrength"
-                    label="distortion strength" [min]="0" [max]="10" [step]=".01"
+                    label="distortion strength" [min]="0" [max]="2" [step]=".01"
                     (onChange)="sun.options.shader.distortionStrength = $event"></app-three-input-number>
 
                 <app-three-input-number id="emissiveStrength" [value]="sun.options.shader.emissiveStrength"
-                    label="emissive strength" [min]="-10" [max]="10" [step]=".01"
+                    label="emissive strength" [min]="-4" [max]="4" [step]=".01"
                     (onChange)="sun.options.shader.emissiveStrength = $event"></app-three-input-number>
 
 
                 <app-three-input-number id="fbmFrequency" [value]="sun.options.shader.fbmFrequency"
-                    label="fbm frequency" [min]="0.01" [max]="100" [step]=".01"
+                    label="fbm frequency" [min]="0.1" [max]="100" [step]=".1"
                     (onChange)="sun.options.shader.fbmFrequency = $event"></app-three-input-number>
 
                 <app-three-input-number id="brightness" [value]="sun.options.shader.brightness" label="brightness"
-                    [min]="-10" [max]="10" [step]=".01"
+                    [min]="0" [max]="10" [step]=".1"
                     (onChange)="sun.options.shader.brightness = $event"></app-three-input-number>
 
 
                 <app-three-input-number id="contrastPower" [value]="sun.options.shader.contrastPower"
-                    label="contrastPower" [min]="-10" [max]="10" [step]=".01"
+                    label="contrastPower" [min]="0" [max]="10" [step]=".1"
                     (onChange)="sun.options.shader.contrastPower = $event"></app-three-input-number>
 
                 <app-three-input-number id="fbmScale" [value]="sun.options.shader.fbmScale" label="fbmScale" [min]="-10"
                     [max]="10" [step]=".01" (onChange)="sun.options.shader.fbmScale = $event"></app-three-input-number>
 
                 <app-three-input-number id="fbmOffset" [value]="sun.options.shader.fbmOffset" label="fbmOffset"
-                    [min]="-10" [max]="10" [step]=".01"
+                    [min]="0" [max]="1" [step]=".01"
                     (onChange)="sun.options.shader.fbmOffset = $event"></app-three-input-number>
 
                 <app-three-input-number id="emissiveThresholdMin" [value]="sun.options.shader.emissiveThresholdMin"
