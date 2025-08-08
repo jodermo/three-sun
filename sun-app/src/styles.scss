@@ -28,32 +28,178 @@ body {
     background: #000;
     color: #fff;
     overflow: hidden;
+    font-family: Arial, Helvetica, sans-serif;
+
+    a {
+        color: #fff783;
+        text-decoration: none;
+        cursor: pointer;
+        pointer-events: all !important;
+
+        &:hover {
+            color: #ffee00;
+            text-decoration: underline;
+        }
+
+    }
+
+    .copyright {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        pointer-events: none;
+        font-size: .8rem;
+        display: flex;
+        column-gap: .25rem;
+        row-gap: .25rem;
+        flex-wrap: wrap;
+        padding: .25rem;
+
+        opacity: .5;
+
+    }
+
+    button {
+        background: #111111;
+        color: #fff;
+        border: none;
+        padding: .5rem;
+        cursor: pointer;
+        font-weight: bold;
+        text-transform: uppercase;
+        border-radius: .25rem;
+
+        &:hover {
+            background: #333333;
+            color: #ffbb00;
+        }
+    }
 
     canvas {
         pointer-events: none;
     }
 
+    .three-sun-editor {
+        border-left: 1px solid #333333;
+        background: rgba(0, 0, 0, 0.75);
+
+        .three-sun-editor-section {}
+
+        .accordeon {
+            position: relative;
+            width: 100%;
+            max-height: 1000px;
+            height: auto;
+            overflow: hidden;
+            transition: max-height .75s ease;
+
+            &.closed {
+                max-height: 0;
+            }
+        }
+
+        .toggle-editor-button {
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: #fff;
+            font-size: 2rem;
+            padding: .5rem;
+            font-weight: bold;
+            white-space: nowrap;
+        }
+
+        h1,
+        h2 {
+            padding: 0 .5rem;
+            margin: 1.5rem 0 0 0;
+            color: #ffbb00;
+            text-transform: uppercase;
+            border-bottom: 1px solid #333333;
+        }
+
+    }
+
 
     .form-field {
+        position: relative;
         display: flex;
         column-gap: .5rem;
         pointer-events: all;
         margin-bottom: .25rem;
 
+        line-height: 1.75rem;
+        box-sizing: border-box;
+        padding: .25rem .5rem;
+        border-bottom: 1px solid #333333;
+
         .form-field-label {
             flex: 1;
-            text-align: right;
+            text-align: left;
+            font-weight: bold;
+            white-space: nowrap;
+            font-size: .75rem;
+            color: #ffd665;
+            min-width: 25%;
+            overflow: hidden;
         }
 
         .form-field-input {
             flex: 1;
-            padding: .25rem .5rem;
-            border: none;
+            display: flex;
+            text-align: left;
+
+            input {
+                flex: 1;
+                padding: .25rem .5rem;
+                border: none;
+                height: 1.5rem;
+                box-sizing: border-box;
+                pointer-events: all;
+
+                &[type="color"] {
+                    padding: 0 0;
+                }
+
+                &[type="checkbox"] {
+                    cursor: pointer;
+                    display: block;
+                    flex: initial;
+                    width: 1.25rem;
+                    height: 1.25rem;
+                }
+
+                &[ type="range"] {
+                    cursor: pointer;
+                }
+            }
+
         }
+
+
 
         .form-field-value {
             flex: 1;
-            text-align: left;
+            text-align: right;
+            font-style: italic;
+
+        }
+
+        .form-field-reset {
+            width: 2rem;
+            height: 2rem;
+            font-weight: bold;
+            font-size: 1.5rem;
+            line-height: 2rem;
+            padding: 0;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+
+            &>span {
+                transform: translateY(-.15rem);
+            }
         }
 
 

@@ -21,7 +21,9 @@ import {
 } from 'three';
 
 export interface SunCoronaOptions {
+  active: boolean;
   size: number;
+  scale: number;
   speed: number;
   glowColor: Color;
   flareStrength: number;
@@ -32,6 +34,15 @@ export interface SunCoronaOptions {
   edgeFadeEnd: number;
   baseGlowThreshold: number;
   animationSpeed: number;
+  syncWithSun: boolean;
+  wrapRotation: boolean;
+  enablePulsing: boolean;
+  pulseFrequency: number;
+  pulseAmplitude: number;
+  enableMultiAxisReaction: boolean;
+  rotationReactivity: number;
+  rotationDecay: number;
+  reactiveScaling: number;
 }
 
 export class SunCoronaService {
@@ -46,6 +57,7 @@ export class SunCoronaService {
   constructor(
     private sun: ThreeSunService,
     public options: SunCoronaOptions = {
+      active: true,
       glowColor: new Color('#ffee00'),
       flareStrength: 1.5,
       baseGlowStrength: 1.0,
@@ -55,8 +67,18 @@ export class SunCoronaService {
       edgeFadeEnd: 0.5,
       baseGlowThreshold: 0.35,
       animationSpeed: 1.0,
-      size:4,
-      speed: 1
+      size: 4,
+      scale: 1,
+      speed: 1,
+      syncWithSun: true,
+      wrapRotation: true,
+      enablePulsing: true,
+      pulseFrequency: 0.234,
+      pulseAmplitude: 1,
+      enableMultiAxisReaction: true,
+      rotationReactivity: 0.3,
+      rotationDecay: 0.98,
+      reactiveScaling: 0.05,
     }
   ) {
     this.material = this.createCoronaMaterial();

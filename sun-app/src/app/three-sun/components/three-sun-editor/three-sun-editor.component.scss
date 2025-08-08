@@ -1,6 +1,6 @@
-.three-sun-editor{
+.three-sun-editor {
     position: absolute;
-    top:0;
+    top: 0;
     right: 0;
     width: 100%;
     max-width: 500px;
@@ -8,9 +8,33 @@
     pointer-events: all;
     z-index: 99;
     text-align: left;
-    overflow-x: hidden;
-    overflow-y: auto;
-    padding: 1rem 0;
+
     box-sizing: border-box;
+
+    transform: translateX(100%);
+
+    transition: transform 0.25s ease;
+
+    .toggle-editor-button {
+        position: absolute;
+        top: 0;
+        right: 100%;
+    }
+
+
+    &.active {
+        transform: translateX(0);
+    }
+
+    .three-sun-editor-content {
+        position: relative;
+        overflow-x: hidden;
+        overflow-y: auto;
+        padding: 1rem 0;
+        height: auto;
+        max-height: 100%;
+        width: 100%;
+
+    }
 
 }

@@ -1,6 +1,13 @@
-<div class="three-input-color form-field">
+<div class="three-input three-input-color form-field">
   <label class="form-field-label" *ngIf="label" [for]="id">{{ label }}</label>
-  <input class="form-field-input" [id]="id" [name]="id" type="color" [value]="getInputValue()"
-    (input)="triggerRealtimeChange($event)" (change)="triggerChange($event)" />
+  <div class="form-field-input">
+    <input class="input-value" [id]="id" [name]="id" type="color" [value]="getInputValue()"
+      (input)="triggerRealtimeChange($event)" (change)="triggerChange($event)" />
+  </div>
   <span class="form-field-value" [ngStyle]="{color:getInputValue()}">{{getInputValue()}}</span>
+  <button class="form-field-reset" (click)="resetValue()">
+    <span>
+      ↺
+    </span>
+  </button>
 </div>

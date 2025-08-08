@@ -33,7 +33,7 @@ import {
   WebGLRenderTarget,
 } from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
-import Stats from 'three/examples/jsm/libs/stats.module.js'
+
 @Component({
   selector: 'app-three-sun',
   standalone: false,
@@ -42,6 +42,7 @@ import Stats from 'three/examples/jsm/libs/stats.module.js'
 })
 export class ThreeSunComponent implements AfterViewInit, OnDestroy {
   @ViewChild('sunContainer', { static: false }) sunContainer!: ElementRef;
+  @ViewChild('sunStats', { static: false }) sunStatsContainer!: ElementRef;
 
   scene!: Scene;
   camera!: PerspectiveCamera;
@@ -50,7 +51,7 @@ export class ThreeSunComponent implements AfterViewInit, OnDestroy {
   renderTarget!: WebGLRenderTarget;
   renderPass!: RenderPass;
   bloomPass!: UnrealBloomPass;
- stats = new Stats()
+
 
   /**
    * Settings for camera, background, and post-processing effects.
@@ -67,7 +68,6 @@ export class ThreeSunComponent implements AfterViewInit, OnDestroy {
       },
     },
   };
-
 
   private lastFrameTime = performance.now();
   private animationId!: number;
@@ -116,7 +116,10 @@ export class ThreeSunComponent implements AfterViewInit, OnDestroy {
    * Initializes the entire Three.js scene: camera, renderer, postprocessing, sun.
    */
   initScene(): void {
-    document.body.appendChild(this.stats.dom)
+    if (this.sunStatsContainer.nativeElement) {
+      this.sun.addStats(this.sunStatsContainer.nativeElement);
+      this.sun.hideStats();
+    }
     this.width = this.sunContainer.nativeElement.clientWidth;
     this.height = this.sunContainer.nativeElement.clientHeight;
 
@@ -192,7 +195,7 @@ export class ThreeSunComponent implements AfterViewInit, OnDestroy {
 
     this.renderer.render(this.scene, this.camera);
     this.composer.render();
-    this.stats.update();
+
   };
 
   /**

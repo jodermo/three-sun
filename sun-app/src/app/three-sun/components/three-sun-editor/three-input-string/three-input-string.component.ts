@@ -1,4 +1,5 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, Output } from '@angular/core';
+import { ThreeInputComponent } from '../three-input/three-input.component';
 
 @Component({
   selector: 'app-three-input-string',
@@ -6,30 +7,16 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
   templateUrl: './three-input-string.component.html',
   styleUrl: './three-input-string.component.scss',
 })
-export class ThreeInputStringComponent {
-  @Input() value?: string;
-  @Input() label?: string;
-  @Input() id = 'ThreeInputNumberComponent';
-  @Input() preventRealtimeChanges = false;
+export class ThreeInputStringComponent extends ThreeInputComponent<string> {
+  override id = 'ThreeInputNumberComponent';
 
-  @Output() onChange = new EventEmitter<string>();
+  @Output() override onChange = new EventEmitter<string>();
 
-  getInputValue() {
+  override getInputValue() {
     if (this.value) {
       return this.value;
     }
     return '';
   }
 
-  triggerRealtimeChange(event: Event) {
-    if (!this.preventRealtimeChanges) {
-      this.triggerChange(event);
-    }
-  }
-
-  triggerChange(event: Event) {
-    const input = event.target as HTMLInputElement;
-    this.value = input.value;
-    this.onChange.emit(this.value);
-  }
 }

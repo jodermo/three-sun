@@ -36,6 +36,7 @@ import {
 } from 'three/addons/objects/LensflareMesh.js';
 import { ThreeSunConfig } from './three-sun.config';
 import { SunCoronaOptions } from './services/sun-corona.service';
+import Stats from 'three/examples/jsm/libs/stats.module.js';
 
 export interface ThreeSunOptions {
   rotation: {
@@ -54,6 +55,10 @@ export interface ThreeSunOptions {
   providedIn: 'root',
 })
 export class ThreeSunService {
+  editorActive = false;
+
+  stats = new Stats();
+
   // Scene graph references
   scene!: Scene;
   camera!: PerspectiveCamera;
@@ -83,6 +88,8 @@ export class ThreeSunService {
    * Handles animated lava shader logic and color options.
    */
   shader = new SunShaderService(this, this.options.shader);
+
+  statsVisible = false;
 
   /**
    * Initializes the sun mesh, shader, corona layers, and optional lensflares.
@@ -132,6 +139,29 @@ export class ThreeSunService {
     setTimeout(() => this.spawnFlare(), 1000 + Math.random() * 4000);
     setTimeout(() => this.spawnFlare(), 1000 + Math.random() * 4000);
     setTimeout(() => this.spawnFlare(), 1000 + Math.random() * 4000);
+  }
+
+  addStats(htmlElement: HTMLElement) {
+    htmlElement.appendChild(this.stats.dom);
+    this.showStats();
+  }
+
+  showStats() {
+    this.stats.dom.style.display = 'block';
+    this.statsVisible = true;
+  }
+
+  hideStats() {
+    this.stats.dom.style.display = 'none';
+    this.statsVisible = false;
+  }
+
+  toggleStats() {
+    if (this.statsVisible) {
+      this.hideStats();
+    } else {
+      this.showStats();
+    }
   }
 
   /**
@@ -204,6 +234,7 @@ export class ThreeSunService {
     this.coronas.forEach((corona) => corona.animate(deltaTime));
     this.solarFlares.forEach((flare) => flare.animate(deltaTime));
     this.lensflares.forEach((f) => f.position.copy(this.light.position));
+    this.stats.update();
   }
 
   /**
@@ -211,5 +242,19 @@ export class ThreeSunService {
    */
   destroy(): void {
     // Optional: Dispose geometry, materials, textures, etc.
+  }
+
+  showEditor() {
+    this.editorActive = true;
+  }
+  hideEditor() {
+    this.editorActive = false;
+  }
+  toggleEditor() {
+    if (this.editorActive) {
+      this.hideEditor();
+    } else {
+      this.showEditor();
+    }
   }
 }

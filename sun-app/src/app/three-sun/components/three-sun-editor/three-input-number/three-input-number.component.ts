@@ -1,4 +1,5 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { ThreeInputComponent } from '../three-input/three-input.component';
 
 @Component({
   selector: 'app-three-input-number',
@@ -6,34 +7,26 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
   templateUrl: './three-input-number.component.html',
   styleUrl: './three-input-number.component.scss',
 })
-export class ThreeInputNumberComponent {
-  @Input() value?: number;
+export class ThreeInputNumberComponent extends ThreeInputComponent<number> {
+  override id = 'ThreeInputNumberComponent';
   @Input() min?: number;
   @Input() max?: number;
   @Input() step?: number;
-  @Input() label?: string;
-  @Input() id = 'ThreeInputNumberComponent';
-  @Input() preventRealtimeChanges = false;
 
-  @Output() onChange = new EventEmitter<number>();
+  @Output() override onChange = new EventEmitter<number>();
 
-  getInputValue() {
+  override getInputValue() {
     if (this.value) {
       return this.value + '';
     }
     return 'none';
   }
 
-  triggerRealtimeChange(event: Event) {
-    if (!this.preventRealtimeChanges) {
-      this.triggerChange(event);
-    }
-  }
-
-  triggerChange(event: Event) {
+  override triggerChange(event: Event) {
     const input = event.target as HTMLInputElement;
     this.value = parseFloat(input.value);
     this.onChange.emit(this.value);
+    this.storeValueFromURLQuery();
   }
 
   hasSlider(): boolean {

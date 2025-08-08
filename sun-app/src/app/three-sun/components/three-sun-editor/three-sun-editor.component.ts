@@ -12,5 +12,12 @@ export class ThreeSunEditorComponent {
 
   constructor(public sun: ThreeSunService) {}
 
+  reloadLocation() {
+    const baseUrl = location.origin + location.pathname + location.hash;
+    location.href = baseUrl;
+  }
 
+  changeStatsVisible(visible: boolean) {
+    visible ? this.sun.showStats() : this.sun.hideStats();
+  }
 }

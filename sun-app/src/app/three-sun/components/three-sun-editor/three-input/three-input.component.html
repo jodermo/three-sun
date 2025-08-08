@@ -1,7 +1,7 @@
-<div class="three-input three-input-string form-field">
+<div class="three-input form-field">
     <label class="form-field-label" *ngIf="label" [for]="id">{{ label }}</label>
     <div class="form-field-input">
-        <input class="input-value" [id]="id" [name]="id" type="text" [value]="getInputValue()"
+        <input class="input-value" [id]="id" [name]="id" [value]="getInputValue()"
             (input)="triggerRealtimeChange($event)" (change)="triggerChange($event)" />
     </div>
     <span class="form-field-value">{{getInputValue()}}</span>
