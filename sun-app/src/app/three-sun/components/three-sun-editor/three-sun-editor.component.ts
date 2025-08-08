@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { ThreeSunService } from '../../three-sun.service';
+import { NgThreeSunService } from '../../ng-three-sun.service';
 
 @Component({
   selector: 'app-three-sun-editor',
@@ -10,7 +10,7 @@ import { ThreeSunService } from '../../three-sun.service';
 export class ThreeSunEditorComponent {
   emissiveColor?: string;
 
-  constructor(public sun: ThreeSunService) {}
+  constructor(public sun: NgThreeSunService) {}
 
   reloadLocation() {
     const baseUrl = location.origin + location.pathname + location.hash;

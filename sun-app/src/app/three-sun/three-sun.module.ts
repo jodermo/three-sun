@@ -13,13 +13,13 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ThreeSunComponent } from './three-sun.component';
-import { ThreeSunService } from './three-sun.service';
 import { ThreeSunEditorComponent } from './components/three-sun-editor/three-sun-editor.component';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { ThreeInputColorComponent } from './components/three-sun-editor/three-input-color/three-input-color.component';
 import { ThreeInputNumberComponent } from './components/three-sun-editor/three-input-number/three-input-number.component';
 import { ThreeInputBooleanComponent } from './components/three-sun-editor/three-input-boolean/three-input-boolean.component';
 import { ThreeInputStringComponent } from './components/three-sun-editor/three-input-string/three-input-string.component';
+import { NgThreeSunService } from './ng-three-sun.service';
 
 @NgModule({
   declarations: [
@@ -31,7 +31,7 @@ import { ThreeInputStringComponent } from './components/three-sun-editor/three-i
     ThreeInputStringComponent
   ],
   imports: [CommonModule, ReactiveFormsModule, FormsModule],
-  providers: [ThreeSunService],
+  providers: [NgThreeSunService],
   exports: [ThreeSunComponent],
 })
 export class ThreeSunModule {}

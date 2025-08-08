@@ -11,9 +11,7 @@
  * Designed for real-time visual effects and customization.
  */
 
-import { Injectable } from '@angular/core';
 import {
-  Color,
   Material,
   Mesh,
   PerspectiveCamera,
@@ -51,9 +49,6 @@ export interface ThreeSunOptions {
   };
 }
 
-@Injectable({
-  providedIn: 'root',
-})
 export class ThreeSunService {
   editorActive = false;
 

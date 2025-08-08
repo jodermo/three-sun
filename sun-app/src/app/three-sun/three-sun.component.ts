@@ -18,7 +18,6 @@ import {
   OnDestroy,
 } from '@angular/core';
 
-import { ThreeSunService } from './three-sun.service';
 import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer.js';
 import { RenderPass } from 'three/examples/jsm/postprocessing/RenderPass.js';
 import { UnrealBloomPass } from 'three/examples/jsm/postprocessing/UnrealBloomPass.js';
@@ -33,6 +32,7 @@ import {
   WebGLRenderTarget,
 } from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
+import { NgThreeSunService } from './ng-three-sun.service';
 
 @Component({
   selector: 'app-three-sun',
@@ -83,7 +83,7 @@ export class ThreeSunComponent implements AfterViewInit, OnDestroy {
    */
   public deltaTime = 0;
 
-  constructor(public sun: ThreeSunService) {}
+  constructor(public sun: NgThreeSunService) {}
 
   /**
    * Angular lifecycle hook — initializes the Three.js scene.
