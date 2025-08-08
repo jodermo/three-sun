@@ -1,5 +1,7 @@
 # Three.js Sun App
 
+<img src="https://github.com/jodermo/three-sun/blob/main/sun-app/public/screenshots/01.png" height="192" width="108" />
+
 ### Procedural solar simulation using ShaderMaterial, FBM noise, and animated corona and flare layers. Fully customizable in real-time via uniform-driven parameters.
 - Online Demo: [https://sun.3dapp.online](https://sun.3dapp.online)
 - Repository: [https://github.com/jodermo/three-sun](https://github.com/jodermo/three-sun)
