@@ -137,7 +137,7 @@ export class ThreeSunService {
     this.sunMesh.add(this.light);
     this.startSolarEruptionLoop(this.options.solarEruptions);
   }
-  
+
   startSolarEruptionLoop(options: SolarEruptionOptions): void {
     const scheduleNext = () => {
       if (document.visibilityState !== 'visible') {
@@ -243,6 +243,9 @@ export class ThreeSunService {
    * Includes random size, lifetime, and animation parameters.
    */
   spawnFlare(options: SolarEruptionFlareOptions): void {
+    if (!this.options.solarEruptions.active) {
+      return;
+    }
     const flareOptions = this.generateRandomFlareOptions(options);
 
     const flare = new SolarFlare(this, flareOptions, {

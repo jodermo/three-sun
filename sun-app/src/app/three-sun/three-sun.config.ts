@@ -37,7 +37,7 @@ export class ThreeSunConfig {
       emissiveColor: this.emissiveColor,
     },
     solarEruptions: {
-      active: false,
+      active: true,
       min: {
         count: 4,
         interval: 500,
