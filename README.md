@@ -6,6 +6,15 @@
 - Framework: Angular [https://angular.dev](https://angular.dev)
 - 3D Library: Three.js [https://threejs.org](https://threejs.org)
 
+This Angular-based application is implemented in TypeScript and designed with a separation of concerns in mind. 
+Core logic can be abstracted, making it reusable in standalone TypeScript projects or other frameworks.
+
+Module Directory: [sun-app/src/app/three-sun/](./sun-app/src/app/three-sun/)
+
+TypeScript Only Class: [sun-app/src/app/three-sun/three-sun.service.ts](./sun-app/src/app/three-sun/three-sun.service.ts)
+
+Angular Module: [sun-app/src/app/three-sun/three-sun.module.ts](./sun-app/src/app/three-sun/three-sun.module.ts)
+
 ### © 2025
 - Author: Moritz Petzka
 - Website: [https://petzka.com](https://petzka.com)
