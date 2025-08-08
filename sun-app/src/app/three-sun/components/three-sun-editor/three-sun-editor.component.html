@@ -24,119 +24,308 @@
 
     <div class="three-sun-editor-content">
 
-        <div class="three-sun-editor-section">
-            <h2>Colors</h2>
+        <div class="three-sun-editor-content-wrapper">
 
-            <app-three-input-color id="baseColor" [value]="sun.options.shader.baseColor" label="base color"
-                (onChange)="sun.options.shader.baseColor.set($event)"></app-three-input-color>
+            <div class="three-sun-editor-section">
+                <h2>Colors</h2>
 
-            <app-three-input-color id="hotColor" [value]="sun.options.shader.hotColor" label="hot color"
-                (onChange)="sun.options.shader.hotColor.set($event)"></app-three-input-color>
+                <app-three-input-color id="baseColor" [value]="sun.options.shader.baseColor" label="base color"
+                    (onChange)="sun.options.shader.baseColor.set($event)"></app-three-input-color>
 
-            <app-three-input-color id="deepColor" [value]="sun.options.shader.deepColor" label="deep color"
-                (onChange)="sun.options.shader.deepColor.set($event)"></app-three-input-color>
+                <app-three-input-color id="hotColor" [value]="sun.options.shader.hotColor" label="hot color"
+                    (onChange)="sun.options.shader.hotColor.set($event)"></app-three-input-color>
 
-            <app-three-input-color id="emissiveColor" [value]="sun.options.shader.emissiveColor" label="emissive color"
-                (onChange)="sun.options.shader.emissiveColor.set($event)"></app-three-input-color>
+                <app-three-input-color id="deepColor" [value]="sun.options.shader.deepColor" label="deep color"
+                    (onChange)="sun.options.shader.deepColor.set($event)"></app-three-input-color>
 
-        </div>
+                <app-three-input-color id="emissiveColor" [value]="sun.options.shader.emissiveColor"
+                    label="emissive color"
+                    (onChange)="sun.options.shader.emissiveColor.set($event)"></app-three-input-color>
 
-        <div class="three-sun-editor-section">
-            <h2>Sun Shader</h2>
+            </div>
 
-
-            <app-three-input-number id="distortionStrength" [value]="sun.options.shader.distortionStrength"
-                label="distortion strength" [min]="0" [max]="10" [step]=".01"
-                (onChange)="sun.options.shader.distortionStrength = $event"></app-three-input-number>
-
-            <app-three-input-number id="emissiveStrength" [value]="sun.options.shader.emissiveStrength"
-                label="emissive strength" [min]="-10" [max]="10" [step]=".01"
-                (onChange)="sun.options.shader.emissiveStrength = $event"></app-three-input-number>
+            <div class="three-sun-editor-section">
+                <h2>Sun Shader</h2>
 
 
-            <app-three-input-number id="fbmFrequency" [value]="sun.options.shader.fbmFrequency" label="fbm frequency"
-                [min]="0.01" [max]="100" [step]=".01"
-                (onChange)="sun.options.shader.fbmFrequency = $event"></app-three-input-number>
+                <app-three-input-number id="distortionStrength" [value]="sun.options.shader.distortionStrength"
+                    label="distortion strength" [min]="0" [max]="10" [step]=".01"
+                    (onChange)="sun.options.shader.distortionStrength = $event"></app-three-input-number>
 
-            <app-three-input-number id="brightness" [value]="sun.options.shader.brightness" label="brightness"
-                [min]="-10" [max]="10" [step]=".01"
-                (onChange)="sun.options.shader.brightness = $event"></app-three-input-number>
-
-
-            <app-three-input-number id="contrastPower" [value]="sun.options.shader.contrastPower" label="contrastPower"
-                [min]="-10" [max]="10" [step]=".01"
-                (onChange)="sun.options.shader.contrastPower = $event"></app-three-input-number>
-
-            <app-three-input-number id="fbmScale" [value]="sun.options.shader.fbmScale" label="fbmScale" [min]="-10"
-                [max]="10" [step]=".01" (onChange)="sun.options.shader.fbmScale = $event"></app-three-input-number>
-
-            <app-three-input-number id="fbmOffset" [value]="sun.options.shader.fbmOffset" label="fbmOffset" [min]="-10"
-                [max]="10" [step]=".01" (onChange)="sun.options.shader.fbmOffset = $event"></app-three-input-number>
-
-            <app-three-input-number id="emissiveThresholdMin" [value]="sun.options.shader.emissiveThresholdMin"
-                label="emissiveThresholdMin" [min]=".01" [max]="10" [step]=".01"
-                (onChange)="sun.options.shader.emissiveThresholdMin = $event"></app-three-input-number>
-
-            <app-three-input-number id="emissiveThresholdMax" [value]="sun.options.shader.emissiveThresholdMax"
-                label="emissiveThresholdMax" [min]=".01" [max]="10" [step]=".01"
-                (onChange)="sun.options.shader.emissiveThresholdMax = $event"></app-three-input-number>
-
-        </div>
-
-        <!--
-    <div class="three-sun-editor-section"> 
-        <h2>Lens Flares</h2>
-
-        <app-three-input-boolean id="emissiveColor" [value]="sun.options.lensFLares.active" label="emissive color"
-            (onChange)="sun.options.lensFLares.active = $event"></app-three-input-boolean>
+                <app-three-input-number id="emissiveStrength" [value]="sun.options.shader.emissiveStrength"
+                    label="emissive strength" [min]="-10" [max]="10" [step]=".01"
+                    (onChange)="sun.options.shader.emissiveStrength = $event"></app-three-input-number>
 
 
-    </div>
+                <app-three-input-number id="fbmFrequency" [value]="sun.options.shader.fbmFrequency"
+                    label="fbm frequency" [min]="0.01" [max]="100" [step]=".01"
+                    (onChange)="sun.options.shader.fbmFrequency = $event"></app-three-input-number>
 
-    -->
-        <ng-container *ngFor="let corona of sun.options.coronas; let  i = index">
-            <div class="three-sun-editor-section" [ngClass]="{closed: !corona.active}">
-                <h2>Corona {{(i + 1)}}</h2>
-                <app-three-input-boolean id="coronaActive_{{i}}" [value]="corona.active" label="active"
-                    (onChange)="corona.active = $event"></app-three-input-boolean>
-
-                <div class="accordeon" [ngClass]="{visible: corona.active, closed: !corona.active}">
-                    <app-three-input-number id="flareStrength_{{i}}" [value]="corona.flareStrength"
-                        label="flare strength" [min]=".01" [max]="100" [step]=".01"
-                        (onChange)="corona.flareStrength = $event"></app-three-input-number>
-
-                    <app-three-input-number id="baseGlowStrength_{{i}}" [value]="corona.baseGlowStrength"
-                        label="base glow strength" [min]=".01" [max]="100" [step]=".01"
-                        (onChange)="corona.baseGlowStrength = $event"></app-three-input-number>
-
-                    <app-three-input-number id="radialFalloff_{{i}}" [value]="corona.radialFalloff"
-                        label="radial falloff" [min]=".01" [max]="100" [step]=".01"
-                        (onChange)="corona.radialFalloff = $event"></app-three-input-number>
-
-                    <app-three-input-number id="flareFalloff_{{i}}" [value]="corona.flareFalloff" label="flare falloff"
-                        [min]=".01" [max]="100" [step]=".01"
-                        (onChange)="corona.flareFalloff = $event"></app-three-input-number>
+                <app-three-input-number id="brightness" [value]="sun.options.shader.brightness" label="brightness"
+                    [min]="-10" [max]="10" [step]=".01"
+                    (onChange)="sun.options.shader.brightness = $event"></app-three-input-number>
 
 
-                    <app-three-input-number id="edgeFadeStart_{{i}}" [value]="corona.edgeFadeStart"
-                        label="edge fade start" [min]=".01" [max]="100" [step]=".01"
-                        (onChange)="corona.edgeFadeStart = $event"></app-three-input-number>
+                <app-three-input-number id="contrastPower" [value]="sun.options.shader.contrastPower"
+                    label="contrastPower" [min]="-10" [max]="10" [step]=".01"
+                    (onChange)="sun.options.shader.contrastPower = $event"></app-three-input-number>
 
-                    <app-three-input-number id="edgeFadeEnd_{{i}}" [value]="corona.edgeFadeEnd" label="edge fade end"
-                        [min]=".01" [max]="100" [step]=".01"
-                        (onChange)="corona.edgeFadeEnd = $event"></app-three-input-number>
+                <app-three-input-number id="fbmScale" [value]="sun.options.shader.fbmScale" label="fbmScale" [min]="-10"
+                    [max]="10" [step]=".01" (onChange)="sun.options.shader.fbmScale = $event"></app-three-input-number>
 
-                    <app-three-input-number id="baseGlowThreshold_{{i}}" [value]="corona.baseGlowThreshold"
-                        label="base glow threshold" [min]=".01" [max]="1" [step]=".01"
-                        (onChange)="corona.baseGlowThreshold = $event"></app-three-input-number>
+                <app-three-input-number id="fbmOffset" [value]="sun.options.shader.fbmOffset" label="fbmOffset"
+                    [min]="-10" [max]="10" [step]=".01"
+                    (onChange)="sun.options.shader.fbmOffset = $event"></app-three-input-number>
 
-                    <app-three-input-number id="animationSpeed_{{i}}" [value]="corona.animationSpeed"
-                        label="animation speed" [min]=".01" [max]="100" [step]=".01"
-                        (onChange)="corona.animationSpeed = $event"></app-three-input-number>
+                <app-three-input-number id="emissiveThresholdMin" [value]="sun.options.shader.emissiveThresholdMin"
+                    label="emissiveThresholdMin" [min]=".01" [max]="10" [step]=".01"
+                    (onChange)="sun.options.shader.emissiveThresholdMin = $event"></app-three-input-number>
+
+                <app-three-input-number id="emissiveThresholdMax" [value]="sun.options.shader.emissiveThresholdMax"
+                    label="emissiveThresholdMax" [min]=".01" [max]="10" [step]=".01"
+                    (onChange)="sun.options.shader.emissiveThresholdMax = $event"></app-three-input-number>
+
+            </div>
+
+
+            <div class="three-sun-editor-section">
+                <h2>Solar Eruptions</h2>
+
+
+                <app-three-input-boolean id="solarEruptionsActive" [value]="sun.options.solarEruptions.active"
+                    label="active" (onChange)="sun.options.solarEruptions.active = $event"></app-three-input-boolean>
+
+
+
+                <div class="accordeon"
+                    [ngClass]="{visible: sun.options.solarEruptions.active, closed: !sun.options.solarEruptions.active}">
+
+
+
+
+                    <app-three-input-number id="solarEruptionsMin_count" [value]="sun.options.solarEruptions.min.count"
+                        label="min count" [min]="1" [max]="50" [step]="1"
+                        (onChange)="sun.options.solarEruptions.min.count = $event"></app-three-input-number>
+
+                    <app-three-input-number id="solarEruptionsMax_count" [value]="sun.options.solarEruptions.max.count"
+                        label="max count" [min]="sun.options.solarEruptions.min.count" [max]="100" [step]="1"
+                        (onChange)="sun.options.solarEruptions.max.count= $event"></app-three-input-number>
+
+
+                    <app-three-input-number id="solarEruptionsMin_interval"
+                        [value]="sun.options.solarEruptions.min.interval" label="min interval" [min]="250" [max]="5000"
+                        [step]="1" suffix="ms"
+                        (onChange)="sun.options.solarEruptions.min.interval = $event"></app-three-input-number>
+
+                    <app-three-input-number id="solarEruptionsMax_interval"
+                        [value]="sun.options.solarEruptions.max.interval" label="max interval"
+                        [min]="sun.options.solarEruptions.min.interval" [max]="10000" [step]="1" suffix="ms"
+                        (onChange)="sun.options.solarEruptions.max.interval= $event"></app-three-input-number>
+
+
+
+
+
+
+                    <app-three-input-number id="solarEruptions_emissiveStrength"
+                        [value]="sun.options.solarEruptions.flareOptions.shader.emissiveStrength"
+                        label="emissiveStrength" [min]="0" [max]="10" [step]=".1"
+                        (onChange)="sun.options.solarEruptions.flareOptions.shader.emissiveStrength = $event"></app-three-input-number>
+
+                    <app-three-input-number id="solarEruptions_opacity"
+                        [value]="sun.options.solarEruptions.flareOptions.shader.opacity" label="opacity" [min]="0"
+                        [max]="1" [step]=".01"
+                        (onChange)="sun.options.solarEruptions.flareOptions.shader.opacity = $event"></app-three-input-number>
+
+                    <app-three-input-number id="solarEruptions_distortionScale"
+                        [value]="sun.options.solarEruptions.flareOptions.shader.distortionScale" label="distortionScale"
+                        [min]="0" [max]="2" [step]=".01"
+                        (onChange)="sun.options.solarEruptions.flareOptions.shader.distortionScale = $event"></app-three-input-number>
+
+                    <app-three-input-number id="solarEruptions_fadeStart"
+                        [value]="sun.options.solarEruptions.flareOptions.shader.fadeStart" label="fadeStart" [min]="0"
+                        [max]=".5" [step]=".01"
+                        (onChange)="sun.options.solarEruptions.flareOptions.shader.fadeStart = $event"></app-three-input-number>
+
+                    <app-three-input-number id="solarEruptions_fadeEnd"
+                        [value]="sun.options.solarEruptions.flareOptions.shader.fadeEnd" label="fadeEnd"
+                        [min]="sun.options.solarEruptions.flareOptions.shader.fadeStart" [max]="1" [step]=".01"
+                        (onChange)="sun.options.solarEruptions.flareOptions.shader.fadeEnd = $event"></app-three-input-number>
+
+                    <app-three-input-number id="solarEruptions_noiseScaleX"
+                        [value]="sun.options.solarEruptions.flareOptions.shader.noiseScaleX" label="noiseScaleX"
+                        [min]=".1" [max]="10" [step]=".1"
+                        (onChange)="sun.options.solarEruptions.flareOptions.shader.noiseScaleX = $event"></app-three-input-number>
+
+                    <app-three-input-number id="solarEruptions_noiseScaleY"
+                        [value]="sun.options.solarEruptions.flareOptions.shader.noiseScaleY" label="noiseScaleY"
+                        [min]=".1" [max]="10" [step]=".1"
+                        (onChange)="sun.options.solarEruptions.flareOptions.shader.noiseScaleY = $event"></app-three-input-number>
+
+                    <app-three-input-number id="solarEruptions_shaderSpeed"
+                        [value]="sun.options.solarEruptions.flareOptions.shader.speed" label="speed" [min]="-10"
+                        [max]="10" [step]=".1"
+                        (onChange)="sun.options.solarEruptions.flareOptions.shader.speed = $event"></app-three-input-number>
+
+                    <app-three-input-number id="solarEruptionsMin_size"
+                        [value]="sun.options.solarEruptions.flareOptions.min.size" label="min size" [min]="1" [max]="5"
+                        [step]="1"
+                        (onChange)="sun.options.solarEruptions.flareOptions.min.size = $event"></app-three-input-number>
+
+                    <app-three-input-number id="solarEruptionsMax_size"
+                        [value]="sun.options.solarEruptions.flareOptions.max.size" label="max size"
+                        [min]="sun.options.solarEruptions.flareOptions.min.size" [max]="10" [step]="1"
+                        (onChange)="sun.options.solarEruptions.flareOptions.max.size= $event"></app-three-input-number>
+
+
+
+                    <app-three-input-number id="solarEruptionsMin_lifetime"
+                        [value]="sun.options.solarEruptions.flareOptions.min.lifetime" label="min lifetime" [min]=".1"
+                        [max]="5" [step]=".1"
+                        (onChange)="sun.options.solarEruptions.flareOptions.min.lifetime = $event"></app-three-input-number>
+
+                    <app-three-input-number id="solarEruptionsMax_lifetime"
+                        [value]="sun.options.solarEruptions.flareOptions.max.lifetime" label="max lifetime"
+                        [min]="sun.options.solarEruptions.flareOptions.min.lifetime" [max]="10" [step]=".1"
+                        (onChange)="sun.options.solarEruptions.flareOptions.max.lifetime= $event"></app-three-input-number>
+
+
+
+
+                    <app-three-input-number id="solarEruptionsMin_plasmaTrails"
+                        [value]="sun.options.solarEruptions.flareOptions.min.plasmaTrails" label="min plasma trails"
+                        [min]="1" [max]="5" [step]="1"
+                        (onChange)="sun.options.solarEruptions.flareOptions.min.plasmaTrails = $event"></app-three-input-number>
+
+                    <app-three-input-number id="solarEruptionsMax_plasmaTrails"
+                        [value]="sun.options.solarEruptions.flareOptions.max.plasmaTrails" label="max plasma trails"
+                        [min]="sun.options.solarEruptions.flareOptions.min.plasmaTrails" [max]="10" [step]="1"
+                        (onChange)="sun.options.solarEruptions.flareOptions.max.plasmaTrails= $event"></app-three-input-number>
+
+
+                    <app-three-input-number id="solarEruptionsMin_flareCount"
+                        [value]="sun.options.solarEruptions.flareOptions.min.flareCount" label="min flares" [min]="1"
+                        [max]="5" [step]="1"
+                        (onChange)="sun.options.solarEruptions.flareOptions.min.flareCount = $event"></app-three-input-number>
+
+                    <app-three-input-number id="solarEruptionsMax_flareCount"
+                        [value]="sun.options.solarEruptions.flareOptions.max.flareCount" label="max flares"
+                        [min]="sun.options.solarEruptions.flareOptions.min.flareCount" [max]="10" [step]="1"
+                        (onChange)="sun.options.solarEruptions.flareOptions.max.flareCount= $event"></app-three-input-number>
+
+
+                    <app-three-input-number id="solarEruptionsMin_turbulance"
+                        [value]="sun.options.solarEruptions.flareOptions.min.turbulance" label="min turbulance"
+                        [min]=".1" [max]="5" [step]="1"
+                        (onChange)="sun.options.solarEruptions.flareOptions.min.turbulance = $event"></app-three-input-number>
+
+                    <app-three-input-number id="solarEruptionsMax_turbulance"
+                        [value]="sun.options.solarEruptions.flareOptions.max.turbulance" label="max turbulance"
+                        [min]="sun.options.solarEruptions.flareOptions.min.turbulance" [max]="10" [step]="1"
+                        (onChange)="sun.options.solarEruptions.flareOptions.max.turbulance= $event"></app-three-input-number>
 
                 </div>
             </div>
-        </ng-container>
+
+            <ng-container *ngFor="let corona of sun.options.coronas; let  i = index">
+                <div class="three-sun-editor-section" [ngClass]="{closed: !corona.active}">
+                    <h2>Corona {{(i + 1)}}</h2>
+                    <app-three-input-boolean id="coronaActive_{{i}}" [value]="corona.active" label="active"
+                        (onChange)="corona.active = $event"></app-three-input-boolean>
+
+                    <div class="accordeon" [ngClass]="{visible: corona.active, closed: !corona.active}">
+
+                        <app-three-input-boolean id="depthTest_{{i}}" [value]="corona.depthTest" label="depthTest"
+                            (onChange)="corona.depthTest = $event"></app-three-input-boolean>
+
+                        <app-three-input-number id="zIndex_{{i}}" [value]="corona.zIndex" label="zIndex" [min]="1"
+                            [max]="100" [step]="1" (onChange)="corona.zIndex = $event"></app-three-input-number>
+
+                        <app-three-input-number id="coronaSize_{{i}}" [value]="corona.size" label="size" [min]=".01"
+                            [max]="10" [step]=".01" (onChange)="corona.size = $event"></app-three-input-number>
+
+                        <app-three-input-number id="coronaScale_{{i}}" [value]="corona.scale" label="scale" [min]=".01"
+                            [max]="3" [step]=".01" (onChange)="corona.scale = $event"></app-three-input-number>
+
+
+                        <app-three-input-number id="coronaSpeed_{{i}}" [value]="corona.speed" label="speed" [min]="0"
+                            [max]="10" [step]=".01" (onChange)="corona.speed = $event"></app-three-input-number>
+
+
+                        <app-three-input-number id="flareStrength_{{i}}" [value]="corona.flareStrength" label="strength"
+                            [min]="0" [max]="10" [step]=".001"
+                            (onChange)="corona.flareStrength = $event"></app-three-input-number>
+
+                        <app-three-input-number id="baseGlowStrength_{{i}}" [value]="corona.baseGlowStrength"
+                            label="base glow" [min]=".01" [max]="10" [step]=".01"
+                            (onChange)="corona.baseGlowStrength = $event"></app-three-input-number>
+
+                        <app-three-input-number id="radialFalloff_{{i}}" [value]="corona.radialFalloff"
+                            label="radial falloff" [min]="-10" [max]="10" [step]=".001"
+                            (onChange)="corona.radialFalloff = $event"></app-three-input-number>
+
+                        <app-three-input-number id="flareFalloff_{{i}}" [value]="corona.flareFalloff"
+                            label="flare falloff" [min]=".01" [max]="10" [step]=".01"
+                            (onChange)="corona.flareFalloff = $event"></app-three-input-number>
+
+
+                        <app-three-input-number id="edgeFadeStart_{{i}}" [value]="corona.edgeFadeStart"
+                            label="edge fade start" [min]="0" [max]=".5" [step]=".001"
+                            (onChange)="corona.edgeFadeStart = $event"></app-three-input-number>
+
+                        <app-three-input-number id="edgeFadeEnd_{{i}}" [value]="corona.edgeFadeEnd"
+                            label="edge fade end" [min]="corona.edgeFadeStart" [max]="1" [step]=".001"
+                            (onChange)="corona.edgeFadeEnd = $event"></app-three-input-number>
+
+
+                        <app-three-input-number id="baseGlowThreshold_{{i}}" [value]="corona.baseGlowThreshold"
+                            label="base glow threshold" [min]=".01" [max]="1" [step]=".01"
+                            (onChange)="corona.baseGlowThreshold = $event"></app-three-input-number>
+
+
+                        <app-three-input-number id="animationSpeed_{{i}}" [value]="corona.animationSpeed"
+                            label="animation speed" [min]="-10" [max]="10" [step]=".01"
+                            (onChange)="corona.animationSpeed = $event"></app-three-input-number>
+
+
+                        <app-three-input-boolean id="syncWithSun_{{i}}" [value]="corona.syncWithSun"
+                            label="sync with sun" (onChange)="corona.syncWithSun = $event"></app-three-input-boolean>
+
+                        <app-three-input-boolean id="wrapRotation_{{i}}" [value]="corona.wrapRotation"
+                            label="wrap rotation" (onChange)="corona.wrapRotation = $event"></app-three-input-boolean>
+
+
+                        <app-three-input-boolean id="enablePulsing_{{i}}" [value]="corona.enablePulsing"
+                            label="enable pulsing" (onChange)="corona.enablePulsing = $event"></app-three-input-boolean>
+
+
+                        <app-three-input-number id="pulseFrequency_{{i}}" [value]="corona.pulseFrequency"
+                            label="pulse frequency" [min]=".01" [max]="100" [step]=".01"
+                            (onChange)="corona.pulseFrequency = $event"></app-three-input-number>
+
+                        <app-three-input-number id="pulseAmplitude_{{i}}" [value]="corona.pulseAmplitude"
+                            label="pulseAmplitude" [min]=".01" [max]="100" [step]=".01"
+                            (onChange)="corona.pulseAmplitude = $event"></app-three-input-number>
+
+                        <app-three-input-boolean id="enableMultiAxisReaction_{{i}}"
+                            [value]="corona.enableMultiAxisReaction" label="enableMultiAxisReaction"
+                            (onChange)="corona.enableMultiAxisReaction = $event"></app-three-input-boolean>
+
+                        <app-three-input-number id="rotationReactivity_{{i}}" [value]="corona.rotationReactivity"
+                            label="rotationReactivity" [min]=".01" [max]="100" [step]=".01"
+                            (onChange)="corona.rotationReactivity = $event"></app-three-input-number>
+                        <app-three-input-number id="rotationDecay_{{i}}" [value]="corona.rotationDecay"
+                            label="rotationDecay" [min]=".01" [max]="100" [step]=".01"
+                            (onChange)="corona.rotationDecay = $event"></app-three-input-number>
+                        <app-three-input-number id="reactiveScaling_{{i}}" [value]="corona.reactiveScaling"
+                            label="reactiveScaling" [min]=".01" [max]="100" [step]=".01"
+                            (onChange)="corona.reactiveScaling = $event"></app-three-input-number>
+
+                    </div>
+                </div>
+            </ng-container>
+        </div>
+
     </div>
 
 

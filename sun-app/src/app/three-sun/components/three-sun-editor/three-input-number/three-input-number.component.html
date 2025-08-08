@@ -1,5 +1,6 @@
 <div class="three-input three-input-number form-field">
-  <label class="form-field-label" *ngIf="label" [for]="id">{{ label }}</label>
+  <label class="form-field-label" *ngIf="label" [for]="id">{{ label }} <span
+      *ngIf="suffix"><sup><sub>({{suffix}})</sub></sup></span></label>
 
   <div class="form-field-input">
     <input class="input-value" [id]="id" [name]="id" type="number" [value]="getInputValue()" [min]="min" [max]="max"
@@ -7,7 +8,8 @@
     <input *ngIf="hasSlider()" class="input-slider" type="range" [min]="min" [max]="max" [step]="step" [value]="value"
       (input)="triggerRealtimeChange($event)" (change)="triggerChange($event)" />
   </div>
-  <span class="form-field-value">{{getInputValue()}}</span>
+  <span class="form-field-value">{{getInputValue()}}<span
+      *ngIf="suffix"><small>{{suffix}}</small></span></span>
   <button class="form-field-reset" (click)="resetValue()">
     <span>
       ↺

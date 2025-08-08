@@ -19,6 +19,27 @@ import {
 import { SolarFlareService } from '../services/solar-flare.service';
 import { ThreeSunService } from '../three-sun.service';
 
+export interface SolarFlareShaderOptions {
+  baseColor: Color;
+  hotColor: Color;
+  deepColor: Color;
+  emissiveStrength: number;
+  opacity: number;
+  distortionScale: number;
+  fadeStart: number;
+  fadeEnd: number;
+  noiseScaleX: number;
+  noiseScaleY: number;
+  speed: number;
+}
+export interface SolarFlareOptions {
+  size: number;
+  lifetime: number;
+  plasmaTrails: number;
+  flareCount: number;
+  turbulance: number;
+}
+
 export class SolarFlare {
   /** Service managing flare shader materials and animation */
   solarFlareService!: SolarFlareService;
@@ -57,12 +78,14 @@ export class SolarFlare {
    */
   constructor(
     private sun: ThreeSunService,
-    public size = 10,
-    public lifetime = 5,
-    public plasmaTrails = 4,
-    public flareCount = 3,
-    public turbulance = 1,
-    public shaderOptions = {
+    public options: SolarFlareOptions = {
+      size: 10,
+      lifetime: 5,
+      plasmaTrails: 4,
+      flareCount: 3,
+      turbulance: 1,
+    },
+    public shaderOptions: SolarFlareShaderOptions = {
       baseColor: new Color('#ffd000ff'),
       hotColor: new Color('#ffee00'),
       deepColor: new Color('#4b0000'),
@@ -76,7 +99,7 @@ export class SolarFlare {
       speed: 1.0,
     }
   ) {
-    this.solarFlareService = new SolarFlareService(sun, shaderOptions);
+    this.solarFlareService = new SolarFlareService(sun, this.shaderOptions);
     this.spawnLocation = sun.randomPointOnSurface();
   }
 
@@ -97,9 +120,9 @@ export class SolarFlare {
 
     const coneAngle = Math.PI / 0.25; // small = tighter fan
 
-    for (let i = 0; i < this.flareCount; i++) {
+    for (let i = 0; i < this.options.flareCount; i++) {
       const angle =
-        ((i - this.flareCount / 2) / this.flareCount) * coneAngle * 2;
+        ((i - this.options.flareCount / 2) / this.options.flareCount) * coneAngle * 2;
 
       // Axis to rotate the normal (fan direction offset)
       const flareDir = normal
@@ -120,7 +143,7 @@ export class SolarFlare {
 
       // Falling back
       const fbMesh = new Mesh(
-        new CircleGeometry(this.size / 2, 64),
+        new CircleGeometry(this.options.size / 2, 64),
         this.fallingBackMaterial
       );
       fbMesh.position.copy(this.spawnLocation);
@@ -130,7 +153,7 @@ export class SolarFlare {
 
       // Flying away
       const faMesh = new Mesh(
-        new CircleGeometry(this.size / 2, 64),
+        new CircleGeometry(this.options.size / 2, 64),
         this.flyAwaykMaterial
       );
       faMesh.position.copy(this.spawnLocation);
@@ -157,18 +180,18 @@ export class SolarFlare {
     this.solarFlareService.options = this.shaderOptions;
     this.solarFlareService.animate(deltaTime);
 
-    const normalizedAge = this.age / this.lifetime;
+    const normalizedAge = this.age / this.options.lifetime;
     const fade = Math.max(Math.sin(normalizedAge * Math.PI), 0); // full sine fade [0 → 1 → 0]
 
     // Common scale based on fade strength
-    const scale = (this.size * fade) / 10;
+    const scale = (this.options.size * fade) / 10;
 
     // Animate fly-away flare meshes
     this.flyAwayMeshes.forEach((mesh) => {
       if (!(mesh.material instanceof ShaderMaterial)) return;
       const mat = mesh.material;
       mat.uniforms['opacity'].value = fade * fade; // extra smooth fade
-      mat.uniforms['time'].value += deltaTime * this.turbulance;
+      mat.uniforms['time'].value += deltaTime * this.options.turbulance;
       mesh.scale.set(scale, scale, scale);
     });
 
@@ -177,12 +200,12 @@ export class SolarFlare {
       if (!(mesh.material instanceof ShaderMaterial)) return;
       const mat = mesh.material;
       mat.uniforms['opacity'].value = fade * fade; // symmetric to flyaway
-      mat.uniforms['time'].value += deltaTime * this.turbulance;
+      mat.uniforms['time'].value += deltaTime * this.options.turbulance;
       mesh.scale.set(scale, scale, scale);
     });
 
     // Remove flare after lifespan ends
-    if (this.age >= this.lifetime) {
+    if (this.age >= this.options.lifetime) {
       this.destroy();
     }
   }

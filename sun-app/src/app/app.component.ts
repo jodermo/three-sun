@@ -9,5 +9,4 @@ import { ThreeSunModule } from './three-sun/three-sun.module';
   styleUrl: './app.component.scss'
 })
 export class AppComponent {
-  title = 'sun-app';
 }

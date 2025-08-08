@@ -21,7 +21,6 @@ export class SunCorona {
   mesh!: Mesh;
   material!: Material;
   geometry!: PlaneGeometry;
-
   private rotationAccumulator: number = 0;
   lastCameraPosition: any;
   private lastSunRotation?: Euler;
@@ -37,6 +36,8 @@ export class SunCorona {
     private sun: ThreeSunService,
     public options: SunCoronaOptions = {
       active: true,
+      depthTest: true,
+      zIndex: 1,
       glowColor: new Color('#ffee00'),
       flareStrength: 1.5,
       baseGlowStrength: 1.0,
@@ -54,7 +55,6 @@ export class SunCorona {
       enablePulsing: true,
       pulseFrequency: 0.234,
       pulseAmplitude: 1,
-
       enableMultiAxisReaction: true,
       rotationReactivity: 0.3,
       rotationDecay: 0.98,
@@ -72,83 +72,35 @@ export class SunCorona {
     this.material = this.coronaService.material;
     this.geometry = new PlaneGeometry(this.options.size, this.options.size);
     this.mesh = new Mesh(this.geometry, this.material);
-
+    this.mesh.renderOrder = this.options.zIndex || 0;
     this.sun.sunMesh.add(this.mesh);
   }
 
-  /**
-   * Updates the corona animation and ensures it faces the camera
-   * while simulating rotation along the sun's movement.
-   * @param deltaTime Time since last frame (in seconds).
-   */
+  setOptions(newOptions: Partial<SunCoronaOptions>) {
+    Object.assign(this.options, newOptions);
 
-  /**
-   * Updates the corona animation and ensures it faces the camera
-   * while simulating rotation along the sun's movement.
-   * @param deltaTime Time since last frame (in seconds).
-   */
-  /**
-   * Updates the corona animation and ensures it faces the camera
-   * while simulating rotation along the sun's movement.
-   * @param deltaTime Time since last frame (in seconds).
-   */
-  animate_aroundaxetowardcamera(deltaTime: number): void {
-    // Update corona service options and animate
-    this.coronaService.options = this.options;
-    this.coronaService.animate(deltaTime);
-
-    // Update position to follow the sun
-    this.mesh.position.copy(this.sun.sunMesh.position);
-
-    // Performance optimization: only update lookAt if camera moved significantly
-    const cameraMovementThreshold = 0.001; // Adjust based on your scene scale
-    const currentCameraPosition = this.sun.camera.position;
-
+    // Recreate geometry if size changed
     if (
-      !this.lastCameraPosition ||
-      this.lastCameraPosition.distanceTo(currentCameraPosition) >
-        cameraMovementThreshold
+      newOptions.size !== undefined &&
+      newOptions.size !== this.geometry.parameters.width
     ) {
-      this.mesh.lookAt(currentCameraPosition);
-
-      // Cache camera position for next frame comparison
-      if (!this.lastCameraPosition) {
-        this.lastCameraPosition = currentCameraPosition.clone();
-      } else {
-        this.lastCameraPosition.copy(currentCameraPosition);
-      }
+      this.geometry.dispose();
+      this.geometry = new PlaneGeometry(this.options.size, this.options.size);
+      this.mesh.geometry = this.geometry;
     }
 
-    // Calculate rotation based on options
-    const spinSpeed = deltaTime * this.options.speed;
+    // Update renderOrder / zIndex
+    this.mesh.renderOrder = this.options.zIndex || 0;
 
-    // Choose rotation method based on configuration
-    if (this.options.syncWithSun && this.sun.sunMesh.rotation) {
-      // Sync rotation with sun's rotation
-      this.mesh.rotation.z = this.sun.sunMesh.rotation.y * this.options.speed;
-    } else {
-      // Independent rotation with accumulator to prevent drift
-      this.rotationAccumulator += spinSpeed;
+    // Update depth settings
+    this.material.depthTest = this.options.depthTest;
+    this.material.depthWrite = this.options.depthTest;
 
-      // Optional: wrap rotation to prevent infinite accumulation
-      if (
-        this.options.wrapRotation &&
-        Math.abs(this.rotationAccumulator) > Math.PI * 2
-      ) {
-        this.rotationAccumulator = this.rotationAccumulator % -(Math.PI * 2);
-      }
+    // Update scale
+    this.mesh.scale.setScalar(this.options.scale);
 
-      this.mesh.rotation.z = this.rotationAccumulator;
-    }
-
-    // Optional: Add subtle scale pulsing for enhanced effect
-    if (this.options.enablePulsing) {
-      const pulseAmount =
-        Math.sin(this.rotationAccumulator * this.options.pulseFrequency) *
-        this.options.pulseAmplitude;
-      const baseScale = this.options.scale || 1;
-      this.mesh.scale.setScalar(baseScale + pulseAmount);
-    }
+    // Pass updated options to the service (which will update shader uniforms in `animate`)
+    this.coronaService.options = this.options;
   }
 
   /**
@@ -161,19 +113,16 @@ export class SunCorona {
       this.mesh.visible = false;
       return;
     }
+    this.setOptions(this.options);
     this.mesh.visible = true;
-
-    // Update corona service options and animate
+    this.material.depthTest = this.options.depthTest;
+    this.material.depthWrite = this.options.depthTest;
+    this.mesh.renderOrder = this.options.zIndex || 0;
     this.coronaService.options = this.options;
     this.coronaService.animate(deltaTime);
-
-    // Update position to follow the sun
     this.mesh.position.copy(this.sun.sunMesh.position);
-
-    // Track sun rotation changes for corona reaction
     const currentSunRotation = this.sun.sunMesh.rotation.clone();
     let sunRotationDelta = { x: 0, y: 0, z: 0 };
-
     if (this.lastSunRotation) {
       sunRotationDelta = {
         x: currentSunRotation.x - this.lastSunRotation.x,
@@ -181,105 +130,74 @@ export class SunCorona {
         z: currentSunRotation.z - this.lastSunRotation.z,
       };
     }
-
-    // Cache sun rotation for next frame
     if (!this.lastSunRotation) {
       this.lastSunRotation = currentSunRotation.clone();
     } else {
       this.lastSunRotation.copy(currentSunRotation);
     }
-
-    // Performance optimization: only update lookAt if camera moved significantly
     const cameraMovementThreshold = 0.001; // Adjust based on your scene scale
     const currentCameraPosition = this.sun.camera.position;
-
     if (
       !this.lastCameraPosition ||
       this.lastCameraPosition.distanceTo(currentCameraPosition) >
         cameraMovementThreshold
     ) {
       this.mesh.lookAt(currentCameraPosition);
-
-      // Cache camera position for next frame comparison
       if (!this.lastCameraPosition) {
         this.lastCameraPosition = currentCameraPosition.clone();
       } else {
         this.lastCameraPosition.copy(currentCameraPosition);
       }
-    }
+      const baseSpinSpeed = deltaTime * this.options.speed;
+      const rotationReactivity = this.options.rotationReactivity || 0.3;
+      const reactiveRotation = {
+        x: sunRotationDelta.x * rotationReactivity,
+        y: sunRotationDelta.y * rotationReactivity,
+        z: sunRotationDelta.z * rotationReactivity,
+      };
+      if (this.options.syncWithSun && this.sun.sunMesh.rotation) {
+        this.mesh.rotation.z =
+          this.sun.sunMesh.rotation.y * this.options.speed +
+          this.reactiveRotationAccumulator.z;
+      } else {
+        this.rotationAccumulator += baseSpinSpeed;
 
-    // Calculate base rotation speed
-    const baseSpinSpeed = deltaTime * this.options.speed;
-
-    // Add reactive rotation based on sun's rotation changes
-    const rotationReactivity = this.options.rotationReactivity || 0.3;
-    const reactiveRotation = {
-      x: sunRotationDelta.x * rotationReactivity,
-      y: sunRotationDelta.y * rotationReactivity,
-      z: sunRotationDelta.z * rotationReactivity,
-    };
-
-    // Choose rotation method based on configuration
-    if (this.options.syncWithSun && this.sun.sunMesh.rotation) {
-      // Sync rotation with sun's rotation + reactive component
-      this.mesh.rotation.z =
-        this.sun.sunMesh.rotation.y * this.options.speed +
-        this.reactiveRotationAccumulator.z;
-    } else {
-      // Independent rotation with accumulator to prevent drift
-      this.rotationAccumulator += baseSpinSpeed;
-
-      // Optional: wrap rotation to prevent infinite accumulation
-      if (
-        this.options.wrapRotation &&
-        Math.abs(this.rotationAccumulator) > Math.PI * 2
-      ) {
-        this.rotationAccumulator = this.rotationAccumulator % (Math.PI * 2);
+        if (
+          this.options.wrapRotation &&
+          Math.abs(this.rotationAccumulator) > Math.PI * 2
+        ) {
+          this.rotationAccumulator = this.rotationAccumulator % (Math.PI * 2);
+        }
+        this.mesh.rotation.z =
+          this.rotationAccumulator + this.reactiveRotationAccumulator.z;
       }
+      this.reactiveRotationAccumulator.x += reactiveRotation.x;
+      this.reactiveRotationAccumulator.y += reactiveRotation.y;
+      this.reactiveRotationAccumulator.z += reactiveRotation.z;
+      const decayRate = this.options.rotationDecay || 0.98;
+      this.reactiveRotationAccumulator.x *= decayRate;
+      this.reactiveRotationAccumulator.y *= decayRate;
+      this.reactiveRotationAccumulator.z *= decayRate;
+      if (this.options.enableMultiAxisReaction) {
+        const offsetX = Math.sin(this.reactiveRotationAccumulator.x * 2) * 0.1;
+        const offsetY = Math.cos(this.reactiveRotationAccumulator.y * 2) * 0.1;
+        this.mesh.rotation.z += offsetX + offsetY;
+      }
+      if (this.options.enablePulsing) {
+        const pulseAmount =
+          Math.sin(this.rotationAccumulator * this.options.pulseFrequency) *
+          this.options.pulseAmplitude;
+        const baseScale = this.options.scale || 1;
+        const rotationIntensity = Math.sqrt(
+          sunRotationDelta.x * sunRotationDelta.x +
+            sunRotationDelta.y * sunRotationDelta.y +
+            sunRotationDelta.z * sunRotationDelta.z
+        );
+        const reactiveScale =
+          rotationIntensity * (this.options.reactiveScaling || 0.05);
 
-      this.mesh.rotation.z =
-        this.rotationAccumulator + this.reactiveRotationAccumulator.z;
-    }
-
-    // Accumulate reactive rotations for subtle ongoing effects
-    this.reactiveRotationAccumulator.x += reactiveRotation.x;
-    this.reactiveRotationAccumulator.y += reactiveRotation.y;
-    this.reactiveRotationAccumulator.z += reactiveRotation.z;
-
-    // Apply decay to reactive rotations to prevent infinite accumulation
-    const decayRate = this.options.rotationDecay || 0.98;
-    this.reactiveRotationAccumulator.x *= decayRate;
-    this.reactiveRotationAccumulator.y *= decayRate;
-    this.reactiveRotationAccumulator.z *= decayRate;
-
-    // Apply additional rotational effects based on sun's X and Y rotations
-    // These create subtle tilting effects that simulate corona material responding to sun rotation
-    if (this.options.enableMultiAxisReaction) {
-      // Create subtle offset rotations that decay over time
-      const offsetX = Math.sin(this.reactiveRotationAccumulator.x * 2) * 0.1;
-      const offsetY = Math.cos(this.reactiveRotationAccumulator.y * 2) * 0.1;
-
-      // Apply these as additional Z-axis rotation components (since corona faces camera)
-      this.mesh.rotation.z += offsetX + offsetY;
-    }
-
-    // Optional: Add subtle scale pulsing for enhanced effect
-    if (this.options.enablePulsing) {
-      const pulseAmount =
-        Math.sin(this.rotationAccumulator * this.options.pulseFrequency) *
-        this.options.pulseAmplitude;
-      const baseScale = this.options.scale || 1;
-
-      // Add reactive scaling based on sun rotation intensity
-      const rotationIntensity = Math.sqrt(
-        sunRotationDelta.x * sunRotationDelta.x +
-          sunRotationDelta.y * sunRotationDelta.y +
-          sunRotationDelta.z * sunRotationDelta.z
-      );
-      const reactiveScale =
-        rotationIntensity * (this.options.reactiveScaling || 0.05);
-
-      this.mesh.scale.setScalar(baseScale + pulseAmount + reactiveScale);
+        this.mesh.scale.setScalar(baseScale + pulseAmount + reactiveScale);
+      }
     }
   }
 }

@@ -22,17 +22,21 @@ export class ThreeInputComponent<T = any> implements OnInit {
 
   ngOnInit(): void {
     setTimeout(() => {
-      if (this.value instanceof Color) {
-        this.initialValue = this.value.clone();
-      } else {
-        this.initialValue = this.value;
-      }
-
-      this.route.queryParams.subscribe((params) => {
-        this.loadValueFromURLQuery(params);
-      });
-      console.log('initialValue', this.id, this.initialValue);
+      this.initValue();
     }, 0);
+  }
+
+  initValue() {
+    if (this.value instanceof Color) {
+      this.initialValue = this.value.clone();
+    } else {
+      this.initialValue = this.value;
+    }
+
+    this.route.queryParams.subscribe((params) => {
+      this.loadValueFromURLQuery(params);
+    });
+    console.log('initialValue', this.id, this.initialValue);
   }
 
   resetValue() {

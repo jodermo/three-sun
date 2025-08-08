@@ -18,23 +18,44 @@ import {
   PointLight,
   Scene,
   SphereGeometry,
-  SRGBColorSpace,
   TextureLoader,
   Vector3,
 } from 'three';
-import { SolarFlare } from './classes/solar-flare';
+import { SolarFlare, SolarFlareOptions } from './classes/solar-flare';
 import { SunCorona } from './classes/sun-corona';
 import {
   SunShaderOptions,
   SunShaderService,
 } from './services/sun-shader.service';
-import {
-  LensflareMesh,
-  LensflareElement,
-} from 'three/addons/objects/LensflareMesh.js';
 import { ThreeSunConfig } from './three-sun.config';
 import { SunCoronaOptions } from './services/sun-corona.service';
 import Stats from 'three/examples/jsm/libs/stats.module.js';
+export interface SolarEruptionFlareOptions {
+  min: SolarFlareOptions;
+  max: SolarFlareOptions;
+  shader: {
+    emissiveStrength: number;
+    opacity: number;
+    distortionScale: number;
+    fadeStart: number;
+    fadeEnd: number;
+    noiseScaleX: number;
+    noiseScaleY: number;
+    speed: number;
+  };
+}
+export interface SolarEruptionOptions {
+  active: boolean;
+  min: {
+    count: number;
+    interval: number;
+  };
+  max: {
+    count: number;
+    interval: number;
+  };
+  flareOptions: SolarEruptionFlareOptions;
+}
 
 export interface ThreeSunOptions {
   rotation: {
@@ -43,10 +64,7 @@ export interface ThreeSunOptions {
   };
   shader: SunShaderOptions;
   coronas: SunCoronaOptions[];
-  lensFLares: {
-    active: boolean;
-    elements: any[];
-  };
+  solarEruptions: SolarEruptionOptions;
 }
 
 export class ThreeSunService {
@@ -66,7 +84,6 @@ export class ThreeSunService {
 
   // Effect components
   coronas: SunCorona[] = [];
-  lensflares: LensflareMesh[] = [];
   solarFlares: SolarFlare[] = [];
 
   // Texture loader for lensflare elements
@@ -85,6 +102,8 @@ export class ThreeSunService {
   shader = new SunShaderService(this, this.options.shader);
 
   statsVisible = false;
+
+  private solarEruptionIntervalId?: number;
 
   /**
    * Initializes the sun mesh, shader, corona layers, and optional lensflares.
@@ -116,26 +135,40 @@ export class ThreeSunService {
 
     this.light = new PointLight(0xffffff, 1, 100);
     this.sunMesh.add(this.light);
-
-    // Optional lens flare initialization
-    if (this.options.lensFLares.active) {
-      const lensflare = new LensflareMesh();
-      for (const e of this.options.lensFLares.elements) {
-        const tex = this.textureLoader.load(e.src);
-        tex.colorSpace = SRGBColorSpace;
-        lensflare.addElement(
-          new LensflareElement(tex, e.size, e.distance, e.color)
-        );
+    this.startSolarEruptionLoop(this.options.solarEruptions);
+  }
+  
+  startSolarEruptionLoop(options: SolarEruptionOptions): void {
+    const scheduleNext = () => {
+      if (document.visibilityState !== 'visible') {
+        this.solarEruptionIntervalId = window.setTimeout(scheduleNext, 1000);
+        return;
       }
-      this.sunMesh.add(lensflare);
-      this.lensflares.push(lensflare);
-    }
-    this.spawnFlare();
-    setTimeout(() => this.spawnFlare(), 1000 + Math.random() * 4000);
-    setTimeout(() => this.spawnFlare(), 1000 + Math.random() * 4000);
-    setTimeout(() => this.spawnFlare(), 1000 + Math.random() * 4000);
+
+      const count = Math.floor(
+        this.randomBetween(options.min.count, options.max.count)
+      );
+      const interval = this.randomBetween(
+        options.min.interval,
+        options.max.interval
+      );
+
+      for (let i = 0; i < count; i++) {
+        this.spawnFlare(options.flareOptions);
+      }
+
+      this.solarEruptionIntervalId = window.setTimeout(scheduleNext, interval);
+    };
+
+    scheduleNext();
   }
 
+  stopSolarEruptionLoop(): void {
+    if (this.solarEruptionIntervalId) {
+      clearTimeout(this.solarEruptionIntervalId);
+      this.solarEruptionIntervalId = undefined;
+    }
+  }
   addStats(htmlElement: HTMLElement) {
     htmlElement.appendChild(this.stats.dom);
     this.showStats();
@@ -173,37 +206,60 @@ export class ThreeSunService {
 
     return new Vector3(x, y, z).applyMatrix4(this.sunMesh.matrixWorld);
   }
+  randomBetween(min: number, max: number): number {
+    return min + Math.random() * (max - min);
+  }
+
+  generateRandomFlareOptions(
+    flareOptions: SolarEruptionFlareOptions
+  ): SolarFlareOptions {
+    return {
+      size: this.randomBetween(flareOptions.min.size, flareOptions.max.size),
+      lifetime: this.randomBetween(
+        flareOptions.min.lifetime,
+        flareOptions.max.lifetime
+      ),
+      plasmaTrails: Math.floor(
+        this.randomBetween(
+          flareOptions.min.plasmaTrails,
+          flareOptions.max.plasmaTrails
+        )
+      ),
+      flareCount: Math.floor(
+        this.randomBetween(
+          flareOptions.min.flareCount,
+          flareOptions.max.flareCount
+        )
+      ),
+      turbulance: this.randomBetween(
+        flareOptions.min.turbulance,
+        flareOptions.max.turbulance
+      ),
+    };
+  }
 
   /**
    * Spawns a dynamic solar flare at a random surface point.
    * Includes random size, lifetime, and animation parameters.
    */
-  spawnFlare(): void {
-    const flare = new SolarFlare(
-      this,
-      2 + Math.random() * 2, // size
-      3 + Math.random() * 5, // lifetime
-      1 + Math.random() * 4, // plasma trails
-      2 + Math.random() * 3, // flare count trails
-      1 - Math.random(), // turbulence
-      {
-        baseColor: this.options.shader.baseColor,
-        hotColor: this.options.shader.hotColor,
-        deepColor: this.options.shader.deepColor,
-        emissiveStrength: 1.2,
-        opacity: 1.0,
-        distortionScale: 1.0,
-        fadeStart: 0.45,
-        fadeEnd: 0.49,
-        noiseScaleX: 4.0,
-        noiseScaleY: 1.5,
-        speed: 1.0,
-      }
-    );
-    flare.spawnSolarFlare();
+  spawnFlare(options: SolarEruptionFlareOptions): void {
+    const flareOptions = this.generateRandomFlareOptions(options);
 
-    // Periodically spawn flares
-    setTimeout(() => this.spawnFlare(), 1000 + Math.random() * 4000);
+    const flare = new SolarFlare(this, flareOptions, {
+      baseColor: this.options.shader.baseColor,
+      hotColor: this.options.shader.hotColor,
+      deepColor: this.options.shader.deepColor,
+      emissiveStrength: options.shader.emissiveStrength,
+      opacity: options.shader.opacity,
+      distortionScale: options.shader.distortionScale,
+      fadeStart: options.shader.fadeStart,
+      fadeEnd: options.shader.fadeEnd,
+      noiseScaleX: options.shader.noiseScaleX,
+      noiseScaleY: options.shader.noiseScaleY,
+      speed: options.shader.speed,
+    });
+
+    flare.spawnSolarFlare();
   }
 
   /**
@@ -228,7 +284,6 @@ export class ThreeSunService {
     this.shader.update(deltaTime);
     this.coronas.forEach((corona) => corona.animate(deltaTime));
     this.solarFlares.forEach((flare) => flare.animate(deltaTime));
-    this.lensflares.forEach((f) => f.position.copy(this.light.position));
     this.stats.update();
   }
 

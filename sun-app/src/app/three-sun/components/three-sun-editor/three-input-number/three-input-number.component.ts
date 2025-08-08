@@ -13,7 +13,25 @@ export class ThreeInputNumberComponent extends ThreeInputComponent<number> {
   @Input() max?: number;
   @Input() step?: number;
 
+  @Input() suffix?: string;
+
   @Output() override onChange = new EventEmitter<number>();
+
+  override initValue() {
+    if (this.value === undefined) {
+      super.initValue();
+      return;
+    }
+    if (this.min && this.value < this.min) {
+      this.value = this.min;
+      this.onChange.emit(this.value);
+    }
+    if (this.max && this.value > this.max) {
+      this.value = this.max;
+      this.onChange.emit(this.value);
+    }
+    super.initValue();
+  }
 
   override getInputValue() {
     if (this.value) {

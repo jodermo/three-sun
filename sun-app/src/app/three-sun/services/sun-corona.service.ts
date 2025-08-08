@@ -22,6 +22,8 @@ import {
 
 export interface SunCoronaOptions {
   active: boolean;
+  depthTest: boolean;
+  zIndex: number;
   size: number;
   scale: number;
   speed: number;
@@ -58,6 +60,8 @@ export class SunCoronaService {
     private sun: ThreeSunService,
     public options: SunCoronaOptions = {
       active: true,
+      depthTest: true,
+      zIndex: 1,
       glowColor: new Color('#ffee00'),
       flareStrength: 1.5,
       baseGlowStrength: 1.0,
@@ -102,6 +106,9 @@ export class SunCoronaService {
         edgeFadeEnd: new Uniform(this.options.edgeFadeEnd),
         baseGlowThreshold: new Uniform(this.options.baseGlowThreshold),
         animationSpeed: new Uniform(this.options.animationSpeed),
+        pulseFrequency: new Uniform(this.options.pulseFrequency),
+        pulseAmplitude: new Uniform(this.options.pulseAmplitude),
+        enablePulsing: new Uniform(this.options.enablePulsing ? 1.0 : 0.0),
       },
       transparent: true,
       depthWrite: false,
@@ -127,6 +134,10 @@ export class SunCoronaService {
         uniform float edgeFadeEnd;
         uniform float baseGlowThreshold;
         uniform float animationSpeed;
+
+        uniform float pulseFrequency;
+        uniform float pulseAmplitude;
+        uniform float enablePulsing;
 
         // 1D hash-based noise
         float hash(float n) {
@@ -159,6 +170,9 @@ export class SunCoronaService {
           float intensity = baseGlowStrength * baseGlow +
                             flareStrength * flare * radialFade;
 
+          float pulse = 1.0 + enablePulsing * sin(time * pulseFrequency) * pulseAmplitude;
+          intensity *= pulse;
+
           float edgeFade = smoothstep(edgeFadeStart, edgeFadeEnd, dist);
           intensity *= 1.0 - edgeFade;
 
@@ -177,7 +191,6 @@ export class SunCoronaService {
   animate(deltaTime: number): void {
     const uniforms = this.material.uniforms;
     uniforms['time'].value += deltaTime * this.options.animationSpeed;
-
     uniforms['glowColor'].value.copy(this.options.glowColor);
     uniforms['flareStrength'].value = this.options.flareStrength;
     uniforms['baseGlowStrength'].value = this.options.baseGlowStrength;
@@ -187,5 +200,9 @@ export class SunCoronaService {
     uniforms['edgeFadeEnd'].value = this.options.edgeFadeEnd;
     uniforms['baseGlowThreshold'].value = this.options.baseGlowThreshold;
     uniforms['animationSpeed'].value = this.options.animationSpeed;
+
+    uniforms['pulseFrequency'].value = this.options.pulseFrequency;
+    uniforms['pulseAmplitude'].value = this.options.pulseAmplitude;
+    uniforms['enablePulsing'].value = this.options.enablePulsing ? 1.0 : 0.0;
   }
 }
